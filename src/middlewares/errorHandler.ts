@@ -1,5 +1,12 @@
+import type { Request, Response, NextFunction } from "express";
+
+interface AppError extends Error{
+  code : String,
+  constraint: string
+
+}
 // Centralized error handler
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err: AppError, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
 
   // Handle Postgres unique constraint violation

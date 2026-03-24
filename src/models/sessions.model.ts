@@ -1,4 +1,4 @@
-import pool from "../config/db.ts";
+import pool from "../config/db";
 
 export const createSessionService = async (
   userId: number,
@@ -39,5 +39,16 @@ export const updateSessionService = async (session: any) => {
 
   return result.rows[0];
 };
+
+export async function revokeAllSessionsService(userId: number) {
+  const result = await pool.query(
+    `
+    UPDATE sessions
+    SET revoked = true
+    WHERE user_id = $1
+  `, [userId]);
+
+  return result.rows[0]
+}
 
 

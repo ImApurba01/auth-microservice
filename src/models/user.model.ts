@@ -1,4 +1,4 @@
-import pool from "../config/db.ts";
+import pool from "../config/db";
 
 
 export const registerUserService = async (
@@ -17,6 +17,7 @@ export const getUserService = async (decoded: any) => {
     return result.rows[0];
 }
 
-// export const loginUserService = async (userId) =>{
-
-// }
+export const loginUserService = async (email:string) =>{
+    const result = await pool.query("SELECT * FROM users where email = $1", [email]);
+    return result.rows[0];
+}

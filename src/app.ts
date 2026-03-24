@@ -1,26 +1,33 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors"
-import pool from "./config/db.ts";
+import pool from "./config/db";
 import dotenv from "dotenv"
-import authRouter from "./routes/auth.routes.ts";
-import errorHandler from "./middlewares/errorHandler.ts";
-import createUserTable from "./data/createUserTable.ts"
+import authRouter from "./routes/auth.routes";
+import errorHandler from "./middlewares/errorHandler";
+import createUserTable from "./data/createUserTable"
 import cookieParser from "cookie-parser"
-import createSessionTable from "./data/createSessionTable.ts";
+import createSessionTable from "./data/createSessionTable";
+import type { Request, Response, NextFunction } from "express";
 
 dotenv.config();
 
 
 const app = express();
 
+
 //Testing postgres connection
-app.get("/health", async (req, res) => {
+app.get("/health", async (req: Request, res: Response) => {
   try {
     await pool.query("SELECT 1");
     res.status(200).json({ status: "healthy" });
-  } catch (err) {
-    res.status(500).json({ status: "unhealthy", error: err.message });
+  } catch (err: unknown) {
+    if(err instanceof Error){
+      res.status(500).json({ status: "unhealthy", error: err.message });
+    }
+    else {
+    console.error("Caught non-Error value:", err);
+  }
   }
 });
 
